@@ -1,0 +1,23 @@
+# Directorios de compilacion
+bin/
+obj/
+publish/
+instalador/
+publicar/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Backups
+*.backup
+
+# Archivos temporales de Windows
+Thumbs.db
+Desktop.ini
+
+# Librerias locales (opcional - descomentar si quieres versionarlas)
+# Libreria/
