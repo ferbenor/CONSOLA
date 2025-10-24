@@ -8,7 +8,7 @@ rem ========================================
 set PROJ=C:\sistemas\prueba conexion informix\CONSOLA\CONSOLA.csproj
 set PUBLISH_DIR=C:\sistemas\prueba conexion informix\CONSOLA\publish
 set INSTALLER_DIR=C:\sistemas\prueba conexion informix\CONSOLA\instalador
-set IIS_DST=\\localhost\Sitios$\CONSOLA
+set IIS_DST=\\192.168.100.18\sitios$\consola
 
 echo ========================================
 echo  DEPLOY CONSOLA con Velopack
@@ -20,8 +20,8 @@ rem 1. INCREMENTAR VERSION AUTOMATICAMENTE
 rem ========================================
 echo [1/5] Incrementando version...
 
-rem Leer la version actual del .csproj
-for /f "tokens=2 delims=<>" %%a in ('findstr /r "<Version>.*</Version>" "%PROJ%"') do set CURRENT_VERSION=%%a
+rem Usar PowerShell para leer y actualizar version de forma confiable
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -Command "$xml = [xml](Get-Content '%PROJ%'); $xml.Project.PropertyGroup.Version"`) do set CURRENT_VERSION=%%v
 
 echo Version actual: %CURRENT_VERSION%
 
@@ -40,7 +40,7 @@ echo Nueva version: %NEW_VERSION%
 
 rem Actualizar la version en el .csproj (con respaldo de seguridad)
 copy "%PROJ%" "%PROJ%.backup" >nul
-powershell -Command "$contenido = Get-Content '%PROJ%' -Raw; if ($contenido) { $contenido -replace '<Version>%CURRENT_VERSION%</Version>', '<Version>%NEW_VERSION%</Version>' | Set-Content '%PROJ%' -NoNewline } else { exit 1 }"
+powershell -NoProfile -Command "$xml = [xml](Get-Content '%PROJ%'); $xml.Project.PropertyGroup.Version = '%NEW_VERSION%'; $xml.Save('%PROJ%')"
 
 if errorlevel 1 (
     echo ERROR: No se pudo actualizar la version en el .csproj
