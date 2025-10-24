@@ -11,13 +11,13 @@ namespace CONSOLA
 	/// </summary>
 	public class FormActualizacion : Form
 	{
-		private ProgressBar progressBar;
-		private Label lblEstado;
-		private Label lblPorcentaje;
-		private Label lblVersion;
-		private Button btnCancelar;
-		private Panel panelHeader;
-		private PictureBox pictureBox;
+		private ProgressBar progressBar = null!;
+		private Label lblEstado = null!;
+		private Label lblPorcentaje = null!;
+		private Label lblVersion = null!;
+		private Button btnCancelar = null!;
+		private Panel panelHeader = null!;
+		private PictureBox pictureBox = null!;
 
 		private UpdateManager _updateManager;
 		private UpdateInfo _updateInfo;
