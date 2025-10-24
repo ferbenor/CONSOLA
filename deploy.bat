@@ -5,10 +5,17 @@ rem ========================================
 rem Script de Despliegue Automático CONSOLA
 rem ========================================
 
-set PROJ=C:\sistemas\prueba conexion informix\CONSOLA\CONSOLA.csproj
-set PUBLISH_DIR=C:\sistemas\prueba conexion informix\CONSOLA\publish
-set INSTALLER_DIR=C:\sistemas\prueba conexion informix\CONSOLA\instalador
+rem Obtener directorio del script
+set SCRIPT_DIR=%~dp0
+
+set PROJ=%SCRIPT_DIR%CONSOLA.csproj
+set PUBLISH_DIR=%SCRIPT_DIR%publish
+set INSTALLER_DIR=%SCRIPT_DIR%instalador
 set IIS_DST=\\192.168.100.18\sitios$\consola
+set ICON=%SCRIPT_DIR%icono.ico
+
+rem Extraer nombre del proyecto del archivo .csproj
+for %%F in ("%PROJ%") do set PACK_ID=%%~nF
 
 echo ========================================
 echo  DEPLOY CONSOLA con Velopack
@@ -76,8 +83,10 @@ rem ========================================
 rem 3. CREAR PAQUETES CON VELOPACK
 rem ========================================
 echo [3/5] Creando paquetes de actualizacion con Velopack...
+echo Pack ID: %PACK_ID%
+echo Icono: %ICON%
 
-vpk pack --packId CONSOLA --packVersion %NEW_VERSION% --packDir "%PUBLISH_DIR%" --mainExe CONSOLA.exe --outputDir "%INSTALLER_DIR%"
+vpk pack --packId %PACK_ID% --packVersion %NEW_VERSION% --packDir "%PUBLISH_DIR%" --mainExe %PACK_ID%.exe --icon "%ICON%" --outputDir "%INSTALLER_DIR%"
 if errorlevel 1 (
     echo ERROR: Fallo la creacion de paquetes con Velopack.
     exit /b 1

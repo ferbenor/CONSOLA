@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalar CONSOLA</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0078d4;
+            margin-bottom: 10px;
+        }
+        .version {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+        .install-btn {
+            background-color: #0078d4;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .install-btn:hover {
+            background-color: #005a9e;
+        }
+        .secondary-btn {
+            background-color: #6c757d;
+        }
+        .secondary-btn:hover {
+            background-color: #5a6268;
+        }
+        .info {
+            background-color: #e7f3ff;
+            padding: 15px;
+            border-left: 4px solid #0078d4;
+            margin: 20px 0;
+        }
+        .requirements {
+            margin-top: 30px;
+        }
+        .requirements h3 {
+            color: #333;
+        }
+        .requirements ul {
+            line-height: 1.8;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CONSOLA - Aplicación de Conexión Informix</h1>
+        <div class="version">Versión 1.0.0</div>
+
+        <div class="info">
+            <strong>Instalación con un clic:</strong> Descarga e instala automáticamente la aplicación con actualizaciones automáticas.
+        </div>
+
+        <div style="margin: 30px 0;">
+            <a href="CONSOLA-win-Setup.exe" class="install-btn">
+                🚀 Instalar CONSOLA
+            </a>
+            <a href="CONSOLA-win-Portable.zip" class="install-btn secondary-btn">
+                📦 Descargar Versión Portable
+            </a>
+        </div>
+
+        <div class="requirements">
+            <h3>Requisitos del Sistema</h3>
+            <ul>
+                <li>Windows 10 o superior (64-bit)</li>
+                <li>50 MB de espacio en disco</li>
+                <li>.NET 8.0 Runtime (se instala automáticamente)</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Características</h3>
+            <ul>
+                <li>✅ Instalación rápida y sencilla</li>
+                <li>✅ Actualizaciones automáticas</li>
+                <li>✅ Conexión a bases de datos Informix/DB2</li>
+                <li>✅ Soporte para arquitectura x64</li>
+            </ul>
+        </div>
+
+        <div class="requirements">
+            <h3>Instrucciones de Instalación</h3>
+            <ol>
+                <li>Haz clic en el botón "Instalar CONSOLA"</li>
+                <li>Ejecuta el archivo descargado (CONSOLA-win-Setup.exe)</li>
+                <li>Sigue las instrucciones del instalador</li>
+                <li>La aplicación se instalará y creará un acceso directo en el escritorio</li>
+            </ol>
+        </div>
+
+        <div class="footer">
+            <p>Tu Empresa © 2025 - Todos los derechos reservados</p>
+            <p>Para soporte técnico, contacta a tu administrador de sistemas</p>
+        </div>
+    </div>
+
+    <script>
+        // Detectar sistema operativo y mostrar advertencia si no es compatible
+        if (!navigator.userAgent.includes('Windows')) {
+            document.querySelector('.info').innerHTML =
+                '<strong>⚠️ Advertencia:</strong> Esta aplicación solo está disponible para Windows. Estás usando: ' +
+                navigator.platform;
+            document.querySelector('.info').style.backgroundColor = '#fff3cd';
+            document.querySelector('.info').style.borderLeftColor = '#ffc107';
+        }
+    </script>
+</body>
+</html>

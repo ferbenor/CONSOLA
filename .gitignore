@@ -5,6 +5,14 @@ publish/
 instalador/
 publicar/
 
+# Archivos generados por Velopack (no versionar)
+*.nupkg
+*-Setup.exe
+*-Portable.zip
+RELEASES
+releases.*.json
+assets.*.json
+
 # Visual Studio
 .vs/
 *.user

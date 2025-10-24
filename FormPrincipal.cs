@@ -20,7 +20,7 @@ namespace CONSOLA
 			InitializeComponent();
 
 			// Configurar el gestor de actualizaciones con la URL de tu servidor IIS
-			_updateManager = new UpdateManager("http://tu-servidor/instalador/");
+			_updateManager = new UpdateManager(Program.rutaActualizaciones);
 
 			// Mostrar versión actual en el título
 			this.Text = $"CONSOLA - Versión {_updateManager.ObtenerVersionActual()}";

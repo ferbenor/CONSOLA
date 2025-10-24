@@ -18,7 +18,7 @@ namespace CONSOLA
 			InitializeComponent();
 
 			// Configurar el gestor de actualizaciones
-			_updateManager = new UpdateManager("http://tu-servidor/instalador/");
+			_updateManager = new UpdateManager(Program.rutaActualizaciones);
 
 			// Mostrar versión actual en el header
 			lblVersion.Text = $"CONSOLA v{_updateManager.ObtenerVersionActual()}";

@@ -10,6 +10,9 @@
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishReadyToRun>false</PublishReadyToRun>
+
+    <!-- Icono para el ejecutable -->
+    <ApplicationIcon>icono.ico</ApplicationIcon>
   </PropertyGroup>
 
   <!-- Configuracion especifica para x64 -->

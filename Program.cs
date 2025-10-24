@@ -7,6 +7,7 @@ namespace CONSOLA
 {
 	internal class Program
 	{
+		public static string rutaActualizaciones = "https://consultas.santarosa.gob.ec/consola/";
 		[STAThread]
 		static void Main(string[] args)
 		{

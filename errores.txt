@@ -1,0 +1,16 @@
+=====================
+23/10/2025 20:17:47
+Issue:
+The solution file CONSOLA.sln specifies a project configuration for project CONSOLA.csproj that does not exist for that project - please check the solution to find and remove the configuration that is not in the below list.
+
+Existing project configurations:
+Debug|AnyCPU
+Release|AnyCPU
+
+Resolution options:
+1. Edit the solution file CONSOLA.sln to change the project configuration to one of the existing configurations for this project.
+2. Use the Configuration Manager to change the project configuration reference in the solution to an existing project configuration or to create a new project configuration.
+
+Project Path: C:\sistemas\prueba conexion informix\CONSOLA\CONSOLA.csproj
+Solution Path: C:\sistemas\prueba conexion informix\CONSOLA.sln
+===================
