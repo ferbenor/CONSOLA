@@ -5,22 +5,19 @@
     <UseWindowsForms>true</UseWindowsForms>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Version>1.0.3</Version>
+    <Version>1.0.11</Version>
     <Platforms>AnyCPU;x64</Platforms>
     <PublishSingleFile>false</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <PublishReadyToRun>false</PublishReadyToRun>
-
     <!-- Icono para el ejecutable -->
     <ApplicationIcon>icono.ico</ApplicationIcon>
   </PropertyGroup>
-
   <!-- Configuracion especifica para x64 -->
   <PropertyGroup Condition="'$(Platform)'=='x64'">
     <PlatformTarget>x64</PlatformTarget>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
-
   <!-- Configuracion especifica para AnyCPU -->
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -29,4 +26,32 @@
     <PackageReference Include="Net.IBM.Data.Db2" Version="8.0.0.310" />
     <PackageReference Include="Velopack" Version="0.0.1298" />
   </ItemGroup>
+
+  <!-- Target para incrementar version antes de publicar -->
+  <Target Name="IncrementVersion" BeforeTargets="Publish" Condition="'$(AutoIncrementVersion)' == 'true'">
+    <PropertyGroup>
+      <!-- Separar la version en partes -->
+      <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
+      <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
+      <VersionPatch>$(Version.Split('.')[2])</VersionPatch>
+      <!-- Incrementar el patch -->
+      <NewVersionPatch>$([MSBuild]::Add($(VersionPatch), 1))</NewVersionPatch>
+      <NewVersion>$(VersionMajor).$(VersionMinor).$(NewVersionPatch)</NewVersion>
+    </PropertyGroup>
+
+    <Message Text="Incrementando version: $(Version) -> $(NewVersion)" Importance="high" />
+
+    <!-- Actualizar el archivo .csproj -->
+    <PropertyGroup>
+      <CsprojContent>$([System.IO.File]::ReadAllText('$(MSBuildProjectFile)'))</CsprojContent>
+      <UpdatedContent>$(CsprojContent.Replace('&lt;Version&gt;$(Version)&lt;/Version&gt;', '&lt;Version&gt;$(NewVersion)&lt;/Version&gt;'))</UpdatedContent>
+    </PropertyGroup>
+
+    <WriteLinesToFile File="$(MSBuildProjectFile)" Lines="$(UpdatedContent)" Overwrite="true" />
+
+    <!-- Actualizar la propiedad para el resto del build -->
+    <PropertyGroup>
+      <Version>$(NewVersion)</Version>
+    </PropertyGroup>
+  </Target>
 </Project>

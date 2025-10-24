@@ -54,6 +54,15 @@ namespace CONSOLA
 		}
 
 		/// <summary>
+		/// Menu: Ayuda → Diagnóstico de Actualizaciones
+		/// </summary>
+		private void menuDiagnosticoActualizaciones_Click(object sender, EventArgs e)
+		{
+			var formDiagnostico = new DiagnosticoActualizacion();
+			formDiagnostico.ShowDialog(this);
+		}
+
+		/// <summary>
 		/// Menu: Click para Actualizar (solo visible cuando hay actualización pendiente)
 		/// </summary>
 		private void menuClickParaActualizar_Click(object sender, EventArgs e)

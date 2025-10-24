@@ -1,0 +1,192 @@
+========================================
+TARGETS DE MSBUILD - GUÍA RÁPIDA
+========================================
+
+¿Qué es un Target?
+==================
+Un Target es una tarea personalizada que se ejecuta durante el proceso de compilación/publicación.
+Es como un "evento" que puedes interceptar para ejecutar código personalizado.
+
+Sintaxis Básica
+===============
+<Target Name="NombreDelTarget" BeforeTargets="OtroTarget" AfterTargets="OtroTarget">
+  <!-- Acciones a ejecutar -->
+</Target>
+
+Parámetros Importantes
+======================
+- Name: Nombre único del target
+- BeforeTargets: Se ejecuta ANTES del target especificado
+- AfterTargets: Se ejecuta DESPUÉS del target especificado
+- Condition: Solo ejecuta si la condición es verdadera
+
+Targets Comunes del Ciclo de Compilación
+=========================================
+1. BeforeBuild    -> Antes de compilar
+2. AfterBuild     -> Después de compilar
+3. BeforePublish  -> Antes de publicar
+4. Publish        -> Durante la publicación
+5. AfterPublish   -> Después de publicar
+
+Ejemplo Práctico: Nuestro IncrementVersion
+==========================================
+
+<Target Name="IncrementVersion" BeforeTargets="Publish" Condition="'$(AutoIncrementVersion)' == 'true'">
+
+  1. Name="IncrementVersion"
+     - Nombre descriptivo de la tarea
+
+  2. BeforeTargets="Publish"
+     - Se ejecuta ANTES de que MSBuild publique la aplicación
+     - Garantiza que la nueva versión esté lista antes de empaquetar
+
+  3. Condition="'$(AutoIncrementVersion)' == 'true'"
+     - Solo se ejecuta si pasamos: dotnet publish -p:AutoIncrementVersion=true
+     - Si NO pasamos el parámetro, no incrementa (útil para builds normales)
+
+  4. Contenido del Target:
+     a) Leer la versión actual desde $(Version)
+     b) Separar en partes: MAJOR.MINOR.PATCH
+     c) Incrementar PATCH en +1
+     d) Actualizar el archivo .csproj con la nueva versión
+     e) Actualizar la propiedad $(Version) para el resto del build
+
+Propiedades de MSBuild
+======================
+Dentro de un Target puedes acceder a propiedades del proyecto:
+
+$(Version)              -> 1.0.5
+$(MSBuildProjectFile)   -> C:\...\CONSOLA.csproj
+$(Configuration)        -> Release
+$(Platform)             -> x64
+$(OutputPath)           -> bin\Release\...
+
+Funciones de MSBuild
+====================
+MSBuild tiene funciones integradas:
+
+$([MSBuild]::Add(5, 1))           -> 6
+$([System.IO.File]::ReadAllText('archivo.txt'))
+$(Version.Split('.')[0])          -> Primera parte de la versión
+
+Tareas de MSBuild
+=================
+Dentro de un Target puedes usar tareas:
+
+<Message Text="Hola Mundo" Importance="high" />
+  -> Muestra un mensaje en consola
+
+<WriteLinesToFile File="archivo.txt" Lines="Contenido" Overwrite="true" />
+  -> Escribe en un archivo
+
+<Copy SourceFiles="origen.txt" DestinationFiles="destino.txt" />
+  -> Copia archivos
+
+<Delete Files="archivo.txt" />
+  -> Elimina archivos
+
+Cómo Funciona Nuestro Target Paso a Paso
+=========================================
+
+Paso 1: dotnet publish -p:AutoIncrementVersion=true
+  -> Activa el Condition en el Target
+
+Paso 2: MSBuild detecta que necesita ejecutar el target "Publish"
+
+Paso 3: BeforeTargets="Publish" hace que IncrementVersion se ejecute primero
+
+Paso 4: Dentro de IncrementVersion:
+  a) Lee: <Version>1.0.5</Version> del .csproj
+  b) Separa: MAJOR=1, MINOR=0, PATCH=5
+  c) Calcula: NewPatch = 5 + 1 = 6
+  d) Nueva versión: NewVersion = 1.0.6
+  e) Lee todo el contenido del .csproj como texto
+  f) Reemplaza: "<Version>1.0.5</Version>" por "<Version>1.0.6</Version>"
+  g) Guarda el archivo .csproj modificado
+  h) Actualiza $(Version) = 1.0.6 para el resto del build
+
+Paso 5: MSBuild continúa con el target "Publish" usando la nueva versión 1.0.6
+
+Paso 6: La aplicación publicada tiene Version=1.0.6
+
+Ventajas sobre PowerShell
+==========================
+✓ Más rápido (no inicia proceso externo)
+✓ Más confiable (MSBuild entiende la estructura .csproj)
+✓ Más simple (todo en un solo archivo)
+✓ Mejor integración con Visual Studio
+✓ Funciona en Windows, Linux, macOS
+✓ No hay problemas con permisos de ejecución
+
+Cómo Desactivar el Auto-Incremento
+===================================
+Si NO quieres incrementar la versión (ej: compilación para debug):
+
+dotnet build
+  -> NO incrementa (Condition no se cumple)
+
+dotnet publish
+  -> NO incrementa (Condition no se cumple)
+
+dotnet publish -p:AutoIncrementVersion=true
+  -> SÍ incrementa ✓
+
+Cómo Ver Qué Targets Se Ejecutan
+=================================
+dotnet publish -p:AutoIncrementVersion=true -v detailed
+  -> Muestra todos los targets en orden
+
+dotnet msbuild -targets
+  -> Lista todos los targets disponibles
+
+Debugging de Targets
+====================
+Agregar mensajes para depurar:
+
+<Message Text="Version actual: $(Version)" Importance="high" />
+<Message Text="Nueva version: $(NewVersion)" Importance="high" />
+
+Estos mensajes aparecen en la consola durante la compilación.
+
+Otros Usos Comunes de Targets
+==============================
+1. Copiar archivos de configuración
+   <Target Name="CopyConfig" AfterTargets="Build">
+     <Copy SourceFiles="app.config" DestinationFolder="$(OutputPath)" />
+   </Target>
+
+2. Generar documentación
+   <Target Name="GenDocs" AfterTargets="Build">
+     <Exec Command="doxygen Doxyfile" />
+   </Target>
+
+3. Limpiar archivos temporales
+   <Target Name="CleanTemp" AfterTargets="Clean">
+     <Delete Files="$(OutputPath)\*.tmp" />
+   </Target>
+
+4. Validar código antes de compilar
+   <Target Name="ValidateCode" BeforeTargets="CoreCompile">
+     <Exec Command="dotnet format --verify-no-changes" />
+   </Target>
+
+5. Firmar archivos después de compilar
+   <Target Name="SignAssemblies" AfterTargets="Build">
+     <Exec Command="signtool.exe sign /f cert.pfx $(OutputPath)\*.dll" />
+   </Target>
+
+Referencias
+===========
+Documentación oficial:
+https://learn.microsoft.com/es-es/visualstudio/msbuild/msbuild-targets
+
+Lista completa de funciones MSBuild:
+https://learn.microsoft.com/es-es/visualstudio/msbuild/property-functions
+
+Tareas comunes de MSBuild:
+https://learn.microsoft.com/es-es/visualstudio/msbuild/msbuild-task-reference
+
+========================================
+Creado: 2025-10-23
+Proyecto: CONSOLA - Sistema de Auto-actualización con Velopack
+========================================

@@ -32,6 +32,7 @@ namespace CONSOLA
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.menuAyuda = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuBuscarActualizaciones = new System.Windows.Forms.ToolStripMenuItem();
+			this.menuDiagnosticoActualizaciones = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuClickParaActualizar = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.lblEstado = new System.Windows.Forms.ToolStripStatusLabel();
@@ -57,7 +58,8 @@ namespace CONSOLA
 			// menuAyuda
 			//
 			this.menuAyuda.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuBuscarActualizaciones});
+            this.menuBuscarActualizaciones,
+            this.menuDiagnosticoActualizaciones});
 			this.menuAyuda.Name = "menuAyuda";
 			this.menuAyuda.Size = new System.Drawing.Size(53, 20);
 			this.menuAyuda.Text = "Ayuda";
@@ -65,9 +67,16 @@ namespace CONSOLA
 			// menuBuscarActualizaciones
 			//
 			this.menuBuscarActualizaciones.Name = "menuBuscarActualizaciones";
-			this.menuBuscarActualizaciones.Size = new System.Drawing.Size(196, 22);
+			this.menuBuscarActualizaciones.Size = new System.Drawing.Size(240, 22);
 			this.menuBuscarActualizaciones.Text = "Buscar Actualizaciones";
 			this.menuBuscarActualizaciones.Click += new System.EventHandler(this.menuBuscarActualizaciones_Click);
+			//
+			// menuDiagnosticoActualizaciones
+			//
+			this.menuDiagnosticoActualizaciones.Name = "menuDiagnosticoActualizaciones";
+			this.menuDiagnosticoActualizaciones.Size = new System.Drawing.Size(240, 22);
+			this.menuDiagnosticoActualizaciones.Text = "Diagnóstico de Actualizaciones";
+			this.menuDiagnosticoActualizaciones.Click += new System.EventHandler(this.menuDiagnosticoActualizaciones_Click);
 			//
 			// menuClickParaActualizar
 			//
@@ -165,6 +174,7 @@ namespace CONSOLA
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem menuAyuda;
 		private System.Windows.Forms.ToolStripMenuItem menuBuscarActualizaciones;
+		private System.Windows.Forms.ToolStripMenuItem menuDiagnosticoActualizaciones;
 		private System.Windows.Forms.ToolStripMenuItem menuClickParaActualizar;
 		private System.Windows.Forms.StatusStrip statusStrip1;
 		private System.Windows.Forms.ToolStripStatusLabel lblEstado;

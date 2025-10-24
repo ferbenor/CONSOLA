@@ -23,54 +23,14 @@ echo ========================================
 echo.
 
 rem ========================================
-rem 1. INCREMENTAR VERSION AUTOMATICAMENTE
+rem 1. PUBLICAR (la version se incrementa automaticamente)
 rem ========================================
-echo [1/5] Incrementando version...
-
-rem Usar PowerShell para leer y actualizar version de forma confiable
-for /f "usebackq delims=" %%v in (`powershell -NoProfile -Command "$xml = [xml](Get-Content '%PROJ%'); $xml.Project.PropertyGroup.Version"`) do set CURRENT_VERSION=%%v
-
-echo Version actual: %CURRENT_VERSION%
-
-rem Extraer numeros de la version (ejemplo: 1.0.1 -> 1 0 1)
-for /f "tokens=1,2,3 delims=." %%a in ("%CURRENT_VERSION%") do (
-    set MAJOR=%%a
-    set MINOR=%%b
-    set PATCH=%%c
-)
-
-rem Incrementar el PATCH en 1
-set /a NEW_PATCH=%PATCH% + 1
-set NEW_VERSION=%MAJOR%.%MINOR%.%NEW_PATCH%
-
-echo Nueva version: %NEW_VERSION%
-
-rem Actualizar la version en el .csproj (con respaldo de seguridad)
-copy "%PROJ%" "%PROJ%.backup" >nul
-powershell -NoProfile -Command "$xml = [xml](Get-Content '%PROJ%'); $xml.Project.PropertyGroup.Version = '%NEW_VERSION%'; $xml.Save('%PROJ%')"
-
-if errorlevel 1 (
-    echo ERROR: No se pudo actualizar la version en el .csproj
-    echo Restaurando backup...
-    copy "%PROJ%.backup" "%PROJ%" >nul
-    del "%PROJ%.backup" >nul
-    exit /b 1
-)
-
-del "%PROJ%.backup" >nul
-
-echo OK: Version actualizada a %NEW_VERSION%
-echo.
-
-rem ========================================
-rem 2. COMPILAR Y PUBLICAR
-rem ========================================
-echo [2/5] Publicando aplicacion...
+echo [1/4] Publicando aplicacion (auto-incrementando version)...
 
 rem Limpiar directorio de publicacion
 if exist "%PUBLISH_DIR%" rmdir /s /q "%PUBLISH_DIR%"
 
-dotnet publish "%PROJ%" -c Release -r win-x64 -o "%PUBLISH_DIR%"
+dotnet publish "%PROJ%" -c Release -r win-x64 -o "%PUBLISH_DIR%" -p:AutoIncrementVersion=true
 if errorlevel 1 (
     echo ERROR: Fallo la publicacion.
     exit /b 1
@@ -79,10 +39,15 @@ if errorlevel 1 (
 echo OK: Aplicacion publicada
 echo.
 
+rem Leer la nueva version del .csproj
+for /f "usebackq" %%v in (`powershell -NoProfile -Command "Select-String -Path '%PROJ%' -Pattern '^\s*<Version>([^<]+)</Version>' | Select-Object -First 1 | ForEach-Object { $_.Matches.Groups[1].Value }"`) do set NEW_VERSION=%%v
+echo Nueva version: %NEW_VERSION%
+echo.
+
 rem ========================================
-rem 3. CREAR PAQUETES CON VELOPACK
+rem 2. CREAR PAQUETES CON VELOPACK
 rem ========================================
-echo [3/5] Creando paquetes de actualizacion con Velopack...
+echo [2/4] Creando paquetes de actualizacion con Velopack...
 echo Pack ID: %PACK_ID%
 echo Icono: %ICON%
 
@@ -96,9 +61,9 @@ echo OK: Paquetes creados
 echo.
 
 rem ========================================
-rem 4. COPIAR AL SERVIDOR IIS
+rem 3. COPIAR AL SERVIDOR IIS
 rem ========================================
-echo [4/5] Copiando archivos al servidor IIS...
+echo [3/4] Copiando archivos al servidor IIS...
 
 rem Crear directorio IIS si no existe
 if not exist "%IIS_DST%" mkdir "%IIS_DST%"
@@ -129,9 +94,9 @@ echo OK: Archivos copiados a IIS
 echo.
 
 rem ========================================
-rem 5. RESUMEN
+rem 4. RESUMEN
 rem ========================================
-echo [5/5] DEPLOY COMPLETADO
+echo [4/4] DEPLOY COMPLETADO
 echo ========================================
 echo Version desplegada: %NEW_VERSION%
 echo Ubicacion IIS: %IIS_DST%
