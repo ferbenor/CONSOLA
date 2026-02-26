@@ -28,10 +28,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CONSOLA.Contratos\CONSOLA.Contratos.csproj" />
-    <!-- Modo desarrollo: contratado usa datos ficticios -->
+  </ItemGroup>
+
+  <!-- Debug: datos ficticios (contratado siempre compila en Debug) -->
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
     <ProjectReference Include="..\CONSOLA.MockDatos\CONSOLA.MockDatos.csproj" />
-    <!-- Modo produccion: descomentar y comentar MockDatos -->
-    <!--<ProjectReference Include="..\CONSOLA.Core\CONSOLA.Core.csproj" />-->
+  </ItemGroup>
+
+  <!-- Release: datos reales de Informix (solo tu maquina tiene CONSOLA.Core) -->
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
+    <ProjectReference Include="..\..\CONSOLA.Core\CONSOLA.Core.csproj" />
   </ItemGroup>
 
   <!-- Target para incrementar version antes de publicar -->
