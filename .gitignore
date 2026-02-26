@@ -1,0 +1,10 @@
+# Build
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+
+# Velopack / instalador generado
+instalador/

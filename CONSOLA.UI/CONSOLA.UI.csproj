@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.0.13</Version>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <PublishReadyToRun>false</PublishReadyToRun>
+    <ApplicationIcon>icono.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Velopack" Version="0.0.1298" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CONSOLA.Contratos\CONSOLA.Contratos.csproj" />
+    <!-- Modo desarrollo: contratado usa datos ficticios -->
+    <ProjectReference Include="..\CONSOLA.MockDatos\CONSOLA.MockDatos.csproj" />
+    <!-- Modo produccion: descomentar y comentar MockDatos -->
+    <!--<ProjectReference Include="..\CONSOLA.Core\CONSOLA.Core.csproj" />-->
+  </ItemGroup>
+
+  <!-- Target para incrementar version antes de publicar -->
+  <Target Name="IncrementVersion" BeforeTargets="Publish" Condition="'$(AutoIncrementVersion)' == 'true'">
+    <PropertyGroup>
+      <VersionMajor>$(Version.Split('.')[0])</VersionMajor>
+      <VersionMinor>$(Version.Split('.')[1])</VersionMinor>
+      <VersionPatch>$(Version.Split('.')[2])</VersionPatch>
+      <NewVersionPatch>$([MSBuild]::Add($(VersionPatch), 1))</NewVersionPatch>
+      <NewVersion>$(VersionMajor).$(VersionMinor).$(NewVersionPatch)</NewVersion>
+    </PropertyGroup>
+    <Message Text="Incrementando version: $(Version) -> $(NewVersion)" Importance="high" />
+    <PropertyGroup>
+      <CsprojContent>$([System.IO.File]::ReadAllText('$(MSBuildProjectFile)'))</CsprojContent>
+      <UpdatedContent>$(CsprojContent.Replace('&lt;Version&gt;$(Version)&lt;/Version&gt;', '&lt;Version&gt;$(NewVersion)&lt;/Version&gt;'))</UpdatedContent>
+    </PropertyGroup>
+    <WriteLinesToFile File="$(MSBuildProjectFile)" Lines="$(UpdatedContent)" Overwrite="true" />
+    <PropertyGroup>
+      <Version>$(NewVersion)</Version>
+    </PropertyGroup>
+  </Target>
+</Project>
